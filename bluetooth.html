@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f3f5f3">
+  <title>安卓豆板连接测试 · 爱老婆拼豆坊</title>
+  <link rel="stylesheet" href="bluetooth.css">
+  <script src="bluetooth.js" defer></script>
+</head>
+<body>
+  <header class="page-header">
+    <a class="brand" href="index.html" aria-label="返回爱老婆拼豆坊">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+      <strong>爱老婆拼豆坊</strong>
+    </a>
+    <a class="back-link" href="index.html">返回图纸 <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main class="page-content">
+    <section class="intro" aria-labelledby="pageTitle">
+      <span class="eyebrow"><span class="status-dot" aria-hidden="true"></span>安卓连接测试</span>
+      <h1 id="pageTitle">连接你的智能豆板</h1>
+      <p class="intro-copy">松鼠家第四代 · 104 × 104 格 · 配套小程序「拼个豆豆」</p>
+      <p class="scope-note">这一步先验证蓝牙连接、查看设备提供的服务。点灯协议尚未确认，此页暂不控制灯光，也不向豆板写入指令。</p>
+    </section>
+
+    <div class="content-grid">
+      <div class="main-column">
+        <section class="card connection-card" aria-labelledby="connectTitle">
+          <div class="section-heading"><h2 id="connectTitle">连接豆板</h2><span class="section-tag">第一步</span></div>
+          <p id="capability" class="capability" role="status">正在检查当前浏览器的蓝牙能力…</p>
+
+          <details class="advanced-settings">
+            <summary>服务 UUID 设置 <span class="optional-label">可选</span></summary>
+            <div class="details-content">
+              <label for="serviceUuids">额外授权的服务 UUID</label>
+              <textarea id="serviceUuids" rows="3" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="有服务 UUID 时再填写，可留空"></textarea>
+              <p class="help-text">默认申请设备信息和电量服务。网页只能查看你在设备选择时授权的服务；豆板自己的控制服务可能需要在这里另外填写。多个 UUID 可用换行或逗号分隔。</p>
+              <div class="inline-guide">
+                <strong>不知道 UUID？先完成一次连接测试。</strong>
+                <p>若看不到服务，可在安卓手机用 nRF Connect 的 <b>Client</b> 扫描并连接这块豆板，查看全部 Service UUID。复制<strong>服务 UUID</strong>（不是 Characteristic UUID），在 nRF Connect 中断开后，返回这里填写，再重新选择豆板授权。</p>
+                <p>查看列表即可，无需写入特征或开启通知。</p>
+              </div>
+            </div>
+          </details>
+
+          <div class="connection-actions">
+            <button id="connectButton" class="button primary" type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10-5 4V3l5 4L7 17"/></svg>选择并连接豆板</button>
+            <div class="secondary-actions"><button id="refreshButton" class="button secondary" type="button" disabled>重新查看服务</button><button id="disconnectButton" class="button secondary" type="button" disabled>断开连接</button></div>
+          </div>
+
+          <div class="connection-status" id="connectionStatus" role="status" aria-live="polite">尚未连接豆板</div>
+          <dl class="device-facts"><div><dt>设备名称</dt><dd id="deviceName">—</dd></div><div><dt>可见服务</dt><dd id="serviceSummary">连接后查看</dd></div></dl>
+        </section>
+
+        <section class="card services-card" aria-labelledby="servicesTitle">
+          <div class="section-heading"><h2 id="servicesTitle">设备服务</h2><span class="section-tag">只读查看</span></div>
+          <p class="section-copy">连接后列出网页已获授权的服务与特征。带有“读取”按钮的特征，只有你点击时才会读取。</p>
+          <div id="services" class="services"><p class="empty-state">连接豆板后，设备服务会显示在这里。</p></div>
+        </section>
+
+        <section class="card report-card" aria-labelledby="reportTitle">
+          <div class="section-heading"><h2 id="reportTitle">导出连接报告</h2><span class="section-tag">第二步</span></div>
+          <p class="section-copy">连接成功或遇到问题后，都可以把报告交给我继续分析。报告在手机本地生成，包含设备服务和本次操作记录，不包含你的图纸。</p>
+          <div class="report-actions"><button id="exportButton" class="button primary" type="button">导出报告</button><button id="copyButton" class="button secondary" type="button">复制报告</button></div>
+        </section>
+
+        <section class="card log-card" aria-labelledby="logTitle">
+          <div class="section-heading"><h2 id="logTitle">本次操作记录</h2><button id="clearLogButton" class="text-button" type="button">清空记录</button></div>
+          <ol id="eventLog" class="event-log" aria-label="蓝牙操作记录"><li>等待开始连接测试。</li></ol>
+        </section>
+      </div>
+
+      <aside class="help-column" aria-label="操作帮助">
+        <section class="card steps-card" aria-labelledby="stepsTitle">
+          <div class="section-heading"><h2 id="stepsTitle">跟着这 4 步操作</h2></div>
+          <ol class="steps">
+            <li><span class="step-number" aria-hidden="true">1</span><div><strong>准备豆板和手机</strong><p>豆板通电，手机开启蓝牙，放在豆板旁。按系统提示授予“附近设备”或蓝牙权限。</p></div></li>
+            <li><span class="step-number" aria-hidden="true">2</span><div><strong>断开原来的连接</strong><p>先在「拼个豆豆」中断开豆板，关闭其他正在连接它的软件。豆板可能只允许一个设备同时连接。</p></div></li>
+            <li><span class="step-number" aria-hidden="true">3</span><div><strong>用安卓 Chrome 连接</strong><p>用 Chrome 打开这个 HTTPS 网址，点击“选择并连接豆板”，在系统列表里选中你的豆板。</p></div></li>
+            <li><span class="step-number" aria-hidden="true">4</span><div><strong>查看结果，导出报告</strong><p>看到服务列表后，可手动读取支持读取的特征，再点“导出报告”。即使连接失败，报告也能帮助定位原因。</p></div></li>
+          </ol>
+        </section>
+
+        <section class="card troubleshooting" aria-labelledby="helpTitle">
+          <div class="section-heading"><h2 id="helpTitle">遇到问题</h2></div>
+          <details><summary>列表里找不到豆板</summary><div class="details-content"><p>确认豆板通电、手机蓝牙已开启，并与「拼个豆豆」或 nRF Connect 断开。必要时重启豆板，再重新选择设备。</p><p>若正在微信里浏览，请复制网址到安卓 Chrome；部分机型还需开启定位或授予附近设备权限。</p></div></details>
+          <details><summary>连接了，却看不到服务</summary><div class="details-content"><p>这不一定代表豆板无法接入。网页仅能查看已授权的服务，默认的设备信息和电量服务也可能不存在。</p><p>先导出报告。再按“服务 UUID 设置”中的方法查看实际服务，填写后断开并重新选择豆板；仅点击“重新查看服务”不会增加授权。</p></div></details>
+          <details><summary>连上以后，为什么灯还没亮？</summary><div class="details-content"><p>连接只是第一步。还需要弄清松鼠家第四代豆板的点灯指令，才能把图纸位置传给它。当前测试页不发送未知指令，连接成功也不代表已经能控制灯光。</p></div></details>
+          <details><summary>苹果手机可以用这页连接吗？</summary><div class="details-content"><p>本次先测试安卓 Chrome。苹果常用浏览器暂不支持这条网页蓝牙连接路线，后续再评估小程序或 App 连接端。</p></div></details>
+        </section>
+      </aside>
+    </div>
+    <footer class="page-footer"><span>爱老婆拼豆坊 · 智能豆板接入测试</span><a href="index.html">返回拼豆工作台</a></footer>
+  </main>
+  <noscript><p class="noscript-message">请允许浏览器运行 JavaScript 后再进行蓝牙连接测试。</p></noscript>
+</body>
+</html>
